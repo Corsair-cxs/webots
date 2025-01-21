@@ -1,8 +1,1 @@
-<svg version="1.1" id="reset-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
-<style type="text/css">
-	.st0{fill:#FFFFFF;}
-</style>
-<rect id="Line" x="328" y="156" class="st0" width="28" height="200"/>
-<polygon id="triangleL" class="st0" points="156,156 156,356 356,256 "/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="reset-svg" x="0" y="0" version="1.1" viewBox="0 0 512 512" xml:space="preserve" style="enable-background:new 0 0 512 512"><style type="text/css">.st0{fill:#fff}</style><rect id="Line" width="28" height="200" x="328" y="156" class="st0"/><polygon id="triangleL" points="156 156 156 356 356 256" class="st0"/></svg>
