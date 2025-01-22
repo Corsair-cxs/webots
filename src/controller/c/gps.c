@@ -1,11 +1,11 @@
 /*
- * Copyright 1996-2021 Cyberbotics Ltd.
+ * Copyright 1996-2023 Cyberbotics Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -137,18 +137,18 @@ void wb_gps_enable(WbDeviceTag tag, int sampling_period) {
     return;
   }
 
-  robot_mutex_lock_step();
+  robot_mutex_lock();
   GPS *gps = gps_get_struct(tag);
   if (gps) {
     gps->enable = true;
     gps->sampling_period = sampling_period;
   } else
     fprintf(stderr, "Error: %s(): invalid device tag.\n", __FUNCTION__);
-  robot_mutex_unlock_step();
+  robot_mutex_unlock();
 }
 
 void wb_gps_disable(WbDeviceTag tag) {
-  GPS *gps = gps_get_struct(tag);
+  const GPS *gps = gps_get_struct(tag);
   if (gps)
     wb_gps_enable(tag, 0);
   else
@@ -157,55 +157,55 @@ void wb_gps_disable(WbDeviceTag tag) {
 
 int wb_gps_get_sampling_period(WbDeviceTag tag) {
   int sampling_period = 0;
-  robot_mutex_lock_step();
-  GPS *gps = gps_get_struct(tag);
+  robot_mutex_lock();
+  const GPS *gps = gps_get_struct(tag);
   if (gps)
     sampling_period = gps->sampling_period;
   else
     fprintf(stderr, "Error: %s(): invalid device tag.\n", __FUNCTION__);
-  robot_mutex_unlock_step();
+  robot_mutex_unlock();
   return sampling_period;
 }
 
 const double *wb_gps_get_values(WbDeviceTag tag) {
   const double *result = NULL;
-  robot_mutex_lock_step();
-  GPS *gps = gps_get_struct(tag);
+  robot_mutex_lock();
+  const GPS *gps = gps_get_struct(tag);
   if (gps) {
     if (gps->sampling_period <= 0)
       fprintf(stderr, "Error: %s() called for a disabled device! Please use: wb_gps_enable().\n", __FUNCTION__);
     result = gps->position;
   } else
     fprintf(stderr, "Error: %s(): invalid device tag.\n", __FUNCTION__);
-  robot_mutex_unlock_step();
+  robot_mutex_unlock();
   return result;
 }
 
-const double wb_gps_get_speed(WbDeviceTag tag) {
+double wb_gps_get_speed(WbDeviceTag tag) {
   double result = NAN;
-  robot_mutex_lock_step();
-  GPS *gps = gps_get_struct(tag);
+  robot_mutex_lock();
+  const GPS *gps = gps_get_struct(tag);
   if (gps) {
     if (gps->sampling_period <= 0)
       fprintf(stderr, "Error: %s() called for a disabled device! Please use: wb_gps_enable().\n", __FUNCTION__);
     result = gps->speed;
   } else
     fprintf(stderr, "Error: %s(): invalid device tag.\n", __FUNCTION__);
-  robot_mutex_unlock_step();
+  robot_mutex_unlock();
   return result;
 }
 
 const double *wb_gps_get_speed_vector(WbDeviceTag tag) {
   const double *result = NULL;
-  robot_mutex_lock_step();
-  GPS *gps = gps_get_struct(tag);
+  robot_mutex_lock();
+  const GPS *gps = gps_get_struct(tag);
   if (gps) {
     if (gps->sampling_period <= 0)
       fprintf(stderr, "Error: %s() called for a disabled device! Please use: wb_gps_enable().\n", __FUNCTION__);
     result = gps->motion;
   } else
     fprintf(stderr, "Error: %s(): invalid device tag.\n", __FUNCTION__);
-  robot_mutex_unlock_step();
+  robot_mutex_unlock();
   return result;
 }
 
@@ -220,12 +220,12 @@ const char *wb_gps_convert_to_degrees_minutes_seconds(double decimal_degrees) {
 
 WbGpsCoordinateSystem wb_gps_get_coordinate_system(WbDeviceTag tag) {
   WbGpsCoordinateSystem result = WB_GPS_LOCAL_COORDINATE;
-  robot_mutex_lock_step();
-  GPS *gps = gps_get_struct(tag);
+  robot_mutex_lock();
+  const GPS *gps = gps_get_struct(tag);
   if (gps)
     result = gps->coordinate_system;
   else
     fprintf(stderr, "Error: %s(): invalid device tag.\n", __FUNCTION__);
-  robot_mutex_unlock_step();
+  robot_mutex_unlock();
   return result;
 }

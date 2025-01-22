@@ -1,11 +1,11 @@
 /*
- * Copyright 1996-2021 Cyberbotics Ltd.
+ * Copyright 1996-2023 Cyberbotics Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -138,7 +138,7 @@ void wbu_car_init() {
   // Parse vehicle caracteristics from the beginning of the data string
   char engine_type;
   int engine_sound_length;
-  char *sub_data_string = (char *)wb_robot_get_custom_data();
+  const char *sub_data_string = wb_robot_get_custom_data();
   i = sscanf(sub_data_string, "%lf %lf %lf %lf %lf %lf %lf %c %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %d %d",
              &instance->wheelbase, &instance->track_front, &instance->track_rear, &instance->front_wheel_radius,
              &instance->rear_wheel_radius, &instance->brake_coefficient, &instance->defaultDampingConstant, &engine_type,

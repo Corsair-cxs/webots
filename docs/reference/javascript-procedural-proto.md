@@ -27,6 +27,8 @@ The first represents the effective value of the field (for instance the one defi
 - As shown in [this table](#vrml97-type-to-javascript-type-conversion), the conversion of a VRML97 node is an object.
 This object contains the following keys: "node\_name" containing the VRML97 node name and "fields" which is in turn an object containing the JavaScript representation of the VRML97 node fields.
 This object is equal to `undefined` if the VRML97 node is not defined (`NULL`).
+- By default, the parser only detects fields that are accessed directly in the template statements (i.e. `fields.appearance`).
+If you would like to access the `fields` object without referencing a specific field, you can add the following line at the beginning of the PROTO file: `# tags: indirectFieldAccess`.
 - Objects that are part of [ECMA-262](http://www.ecma-international.org/publications/standards/Ecma-262.htm) are built-in and globally accessible, such as `Math`, `Date` and `String`.
 - The `context` object provides contextual information about the PROTO.
 Table [this table](#content-of-the-context-object) shows the available information and the corresponding keys.
@@ -157,7 +159,7 @@ A number of modules provide additional utility functions that can be useful when
 To use these functions, the module needs to be included first:
 
 ```javascript
-%{
+%<
   // to import the entire module
   import * as wbrandom from 'wbrandom.js';
 
@@ -166,7 +168,7 @@ To use these functions, the module needs to be included first:
 
   // to import only specific functions instead of the entire module
   import {integer} from 'wbrandom.js';
-}%
+>%
 ```
 
 The available modules are the following:
@@ -823,6 +825,14 @@ The location of this path can be retrieved from the `context` field object, see 
 
 %end
 
+### PROTO Regeneration
+When a field used in a template statement is modified, the PROTO node is regenerated.
+This means that the template statements are re-evaluated and the PROTO node is reloaded in the world.
+For most nodes, this behavior should not affect the simulation.
+However, special care should be taken when using PROTOs that have side effects (e.g. writing to a file).
+Additionally, Robot nodes will restart their controllers when regenerated.
+Using `tags: indirectFieldAccess` in the PROTO file will cause the PROTO to be regenerated whenever any field is modified, even if it is not used in a template statement.
+
 ### Optimization
 
 By default, PROTO files are considered to be deterministic.
@@ -840,7 +850,7 @@ If the same seed is used every time or if it is not specified (i.e using the def
 ### Example
 
 ```
-#VRML_SIM R2022a utf8
+#VRML_SIM {{ webots.version.major }} utf8
 # tags: nonDeterministic
 # template language: javascript
 
@@ -912,7 +922,7 @@ PROTO DominoSpawner [
   Group {
     children [
       %< for (let i = 0; i < dominoSet.length; ++i) { >%
-        Transform {
+        Pose {
           translation %<= dominoSet[i].coordinates.x >% %<= dominoSet[i].coordinates.y >% %<= dominoSet[i].coordinates.z >%
           rotation 0 1 0 %<= Math.PI - angle >%
           children [

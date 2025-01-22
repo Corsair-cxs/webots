@@ -1,10 +1,10 @@
-// Copyright 1996-2021 Cyberbotics Ltd.
+// Copyright 1996-2023 Cyberbotics Ltd.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//     http://www.apache.org/licenses/LICENSE-2.0
+//     https://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -34,7 +34,7 @@ public:
   bool enableSensor(int timestep);
 
 protected:
-  RosSensor(std::string deviceName, Device *device, Ros *ros, bool enableDefaultServices = true);
+  RosSensor(const std::string &deviceName, Device *device, Ros *ros, bool enableDefaultServices = true);
 
   virtual ros::Publisher createPublisher() = 0;
   virtual void publishValue(ros::Publisher publisher) = 0;
@@ -50,6 +50,7 @@ protected:
   };
 
   std::vector<publisherDetails> mPublishList;
+  std::string mFrameIdPrefix;
 
 private:
   ros::ServiceServer mSensorEnableServer;
