@@ -1,10 +1,10 @@
-// Copyright 1996-2021 Cyberbotics Ltd.
+// Copyright 1996-2024 Cyberbotics Ltd.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//     http://www.apache.org/licenses/LICENSE-2.0
+//     https://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,6 +14,7 @@
 
 #include "WbTouchSensor.hpp"
 
+#include "WbDataStream.hpp"
 #include "WbFieldChecker.hpp"
 #include "WbLookupTable.hpp"
 #include "WbMFVector3.hpp"
@@ -129,7 +130,7 @@ void WbTouchSensor::handleMessage(QDataStream &stream) {
   }
 }
 
-void WbTouchSensor::writeAnswer(QDataStream &stream) {
+void WbTouchSensor::writeAnswer(WbDataStream &stream) {
   if (refreshSensorIfNeeded() || mSensor->hasPendingValue()) {
     stream << tag();
     if (mDeviceType != FORCE3D) {  // BUMPER or FORCE
@@ -146,7 +147,7 @@ void WbTouchSensor::writeAnswer(QDataStream &stream) {
     addConfigure(stream);
 }
 
-void WbTouchSensor::addConfigure(QDataStream &stream) {
+void WbTouchSensor::addConfigure(WbDataStream &stream) {
   stream << (short unsigned int)tag();
   stream << (unsigned char)C_CONFIGURE;
   stream << (int)mDeviceType;
@@ -228,18 +229,18 @@ void WbTouchSensor::computeValue() {
   }
 }
 
-void WbTouchSensor::setODEDynamicFlag(WbBaseNode *_node) {
-  WbGeometry *geom = dynamic_cast<WbGeometry *>(_node);
+void WbTouchSensor::setODEDynamicFlag(const WbBaseNode *_node) {
+  const WbGeometry *geom = dynamic_cast<const WbGeometry *>(_node);
 
   if (!geom) {
-    WbShape *shape = dynamic_cast<WbShape *>(_node);
+    const WbShape *shape = dynamic_cast<const WbShape *>(_node);
     if (shape)
       geom = shape->geometry();
   }
   if (geom)
     dGeomSetDynamicFlag(geom->odeGeom());
   else {
-    WbGroup *group = dynamic_cast<WbGroup *>(_node);
+    const WbGroup *group = dynamic_cast<const WbGroup *>(_node);
     if (group) {
       for (int i = 0; i < group->childCount(); i++)
         setODEDynamicFlag(group->child(i));
@@ -249,7 +250,7 @@ void WbTouchSensor::setODEDynamicFlag(WbBaseNode *_node) {
 
 void WbTouchSensor::createOdeObjects() {
   WbSolidDevice::createOdeObjects();
-  WbBaseNode *node = WbSolidDevice::boundingObject();
+  const WbBaseNode *node = WbSolidDevice::boundingObject();
   setODEDynamicFlag(node);
 }
 
@@ -270,7 +271,7 @@ dJointID WbTouchSensor::createJoint(dBodyID body, dBodyID parentBody, dWorldID w
   return joint;
 }
 
-void WbTouchSensor::writeConfigure(QDataStream &stream) {
+void WbTouchSensor::writeConfigure(WbDataStream &stream) {
   mSensor->connectToRobotSignal(robot());
   addConfigure(stream);
 }
