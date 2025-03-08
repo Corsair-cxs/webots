@@ -1,10 +1,10 @@
-# Copyright 1996-2021 Cyberbotics Ltd.
+# Copyright 1996-2024 Cyberbotics Ltd.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#     http://www.apache.org/licenses/LICENSE-2.0
+#     https://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -19,6 +19,7 @@
         For the worlds, since the rotation depends on the proto itself,
         it could be needed to rotate some part manually.
         Also, we advice you to check the differences in a file comparator.
+        It is primarly used to fix the compatibility between R2021a and R2022b
 
 **Dependencies**
   `pip3 install numpy transforms3d`
@@ -187,6 +188,43 @@ def convert_nue_to_enu_world(filename, mode='all', objects_pi=[], objects_pi_2=[
     rotation_next_object = []
     miss_rotation = False
     last_type = ''
+
+    for line in fileinput.input(filename, inplace=True):
+
+        type = [x for x in re.compile('\n|,| ').split(line) if (any(x_char.isalpha() for x_char in x))]
+        vector = [float(x) for x in re.compile('\n|,| ').split(line) if is_number(x)]
+
+        if type:
+            if type[0] in ['DEF']:
+                type = type[2]
+            elif type[0] in ['geometry']:
+                type = type[1]
+            else:
+                type = type[0]
+        if ('ElevationGrid' in line and '{' in line):
+            type = 'ElevationGrid'
+
+        if type in ['corners', 'path', 'wayPoints', 'spine', 'startingAngle', 'endingAngle'] or (
+                        type in ['height'] and 'ElevationGrid' in last_type) or (
+                        type in ['shape'] and 'Crossroad' in last_type):
+            if '[]' not in line:  # if type not empty
+                next_line_is_corners = 1
+            print(line, end='')
+        elif next_line_is_corners == 1:
+            if ']' in line:  # we stop when we reach the end of the node 'point' of 'coord'
+                next_line_is_corners = -1
+                print(line, end='')
+            else:  # else we convert the line
+                # split coordinates separated by commas on new lines
+                if "," in line:
+                    vectors = [x for x in re.compile('[,]').split(line)]
+                    for vector in vectors:
+                        print(add_space(line) + vector.strip())
+                else:
+                    print(line, end='')
+        else:
+            print(line, end='')
+
     for line in fileinput.input(filename, inplace=True):
 
         if "# template language: javascript" in line:
@@ -221,10 +259,10 @@ def convert_nue_to_enu_world(filename, mode='all', objects_pi=[], objects_pi_2=[
             else:
                 miss_rotation = False
 
-            if 'R2021b' in line:
+            if 'R2022a' in line:
+                warning_verbose += 'The version of the file was already R2022a. '
+            elif '#VRML_SIM' in line:
                 line = '#VRML_SIM R2022a utf8 \r\n'
-            elif 'R2022a' in line:
-                warning_verbose += 'The version of the file was already 2022a. '
             if type in ['coordinateSystem']:  # remove the 'coordinateSystem ENU'
                 vector = None
             elif type in ['position'] and len(vector) == 3:
@@ -427,8 +465,9 @@ if __name__ == '__main__':
             error_verbose, clean_verbose, warning_verbose = convert_nue_to_enu_world(
                 filename, mode, objects_pi, objects_pi_2, objects_minus_pi_2)
             if error_verbose:
-                print('''Conversion of \033[33m{}\033[m successful but incomplete. \r\n
-                ■ You may need to convert manually: {}'''.format(filename, error_verbose))
+                msg = '''Conversion of \033[33m{}\033[m successful but incomplete. \r\n
+                ■ You may need to convert manually: {}'''
+                print(msg.format(filename, error_verbose))
             else:
                 if mode == 'clean':
                     print('clean of {} ✅'.format(filename))

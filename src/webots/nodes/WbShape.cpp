@@ -1,10 +1,10 @@
-// Copyright 1996-2021 Cyberbotics Ltd.
+// Copyright 1996-2024 Cyberbotics Ltd.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//     http://www.apache.org/licenses/LICENSE-2.0
+//     https://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -116,9 +116,9 @@ void WbShape::reset(const QString &id) {
   if (baseNode)
     baseNode->reset(id);
 
-  WbNode *const geometry = mGeometry->value();
-  if (geometry)
-    geometry->reset(id);
+  WbNode *const geometryNode = mGeometry->value();
+  if (geometryNode)
+    geometryNode->reset(id);
 }
 
 WbAppearance *WbShape::appearance() const {
@@ -155,6 +155,12 @@ void WbShape::setSleepMaterial() {
   WbGeometry *const g = geometry();
   if (g)
     geometry()->setSleepMaterial();
+}
+
+void WbShape::updateSegmentationColor(const WbRgb &color) {
+  WbGeometry *const g = geometry();
+  if (g)
+    g->setSegmentationColor(color);
 }
 
 void WbShape::updateAppearance() {
@@ -300,9 +306,9 @@ void WbShape::applyMaterialToGeometry() {
 // using uv mapping, paint color and diffuse color
 // could be improved by computing the exact openGL computing including lighting
 void WbShape::pickColor(const WbRay &ray, WbRgb &pickedColor, double *roughness, double *occlusion) const {
-  WbAppearance *const app = appearance();
-  WbPbrAppearance *const pbrApp = pbrAppearance();
-  WbGeometry *const geom = geometry();
+  const WbAppearance *const app = appearance();
+  const WbPbrAppearance *const pbrApp = pbrAppearance();
+  const WbGeometry *const geom = geometry();
 
   WbRgb diffuseColor(1.0f, 1.0f, 1.0f);
   WbRgb textureColor(1.0f, 1.0f, 1.0f);
@@ -484,28 +490,32 @@ bool WbShape::isAValidBoundingObject(bool checkOde, bool warning) const {
 // Export //
 ////////////
 
-bool WbShape::exportNodeHeader(WbVrmlWriter &writer) const {
-  if (writer.isX3d()) {
-    writer << "<" << x3dName() << " id=\'n" << QString::number(uniqueId()) << "\'";
-    if (isInvisibleNode())
-      writer << " render=\'false\'";
+bool WbShape::exportNodeHeader(WbWriter &writer) const {
+  if (writer.isW3d() && isUseNode() && defNode()) {
+    writer << "<" << w3dName() << " id=\'n" << QString::number(uniqueId()) << "\'";
+    writer << " USE=\'" + QString::number(defNode()->uniqueId()) + "\'></" + w3dName() + ">";
+    return true;
+  }
 
-    if (isUseNode() && defNode()) {
-      writer << " USE=\'" + QString::number(defNode()->uniqueId()) + "\'></" + x3dName() + ">";
-      return true;
-    }
-
-    if (!mIsPickable->value())
-      writer << " isPickable='false'";
-    if (mCastShadows->value())
-      writer << " castShadows='true'";
-
-    return false;
-  } else
-    return WbBaseNode::exportNodeHeader(writer);
+  return WbBaseNode::exportNodeHeader(writer);
 }
 
-void WbShape::exportBoundingObjectToX3D(WbVrmlWriter &writer) const {
-  assert(writer.isX3d());
-  geometry()->exportBoundingObjectToX3D(writer);
+void WbShape::exportBoundingObjectToW3d(WbWriter &writer) const {
+  assert(writer.isW3d());
+
+  if (isUseNode() && defNode())
+    writer << "<" << w3dName() << " role='boundingObject' USE=\'n" + QString::number(defNode()->uniqueId()) + "\'/>";
+  else {
+    writer << "<" << w3dName() << " role='boundingObject'"
+           << " id=\'n" << QString::number(uniqueId()) << "\'>";
+    geometry()->write(writer);
+    writer << "</" + w3dName() + ">";
+  }
+}
+
+QStringList WbShape::fieldsToSynchronizeWithW3d() const {
+  QStringList fields;
+  fields << "isPickable"
+         << "castShadows";
+  return fields;
 }

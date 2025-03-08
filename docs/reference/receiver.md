@@ -141,15 +141,6 @@ period = wb_receiver_get_sampling_period(tag)
 
 %tab-end
 
-%tab "ROS"
-
-| name | service/topic | data type | data type definition |
-| --- | --- | --- | --- |
-| `/<device_name>/enable` | `service` | [`webots_ros::set_int`](ros-api.md#common-services) | |
-| `/<device_name>/get_sampling_period` | `service` | [`webots_ros::get_int`](ros-api.md#common-services) | |
-
-%tab-end
-
 %end
 
 ##### Description
@@ -235,15 +226,6 @@ public class Receiver extends Device {
 length = wb_receiver_get_queue_length(tag)
 wb_receiver_next_packet(tag)
 ```
-
-%tab-end
-
-%tab "ROS"
-
-| name | service/topic | data type | data type definition |
-| --- | --- | --- | --- |
-| `/<device_name>/get_queue_length` | `service` | [`webots_ros::get_int`](ros-api.md#common-services) | |
-| `/<device_name>/next_packet` | `service` | [`webots_ros::get_bool`](ros-api.md#common-services) | |
 
 %tab-end
 
@@ -337,7 +319,11 @@ namespace webots {
 from controller import Receiver
 
 class Receiver (Device):
-    def getData(self):
+    def getBytes(self):
+    def getString(self):
+    def getFloats(self):
+    def getInts(self):
+    def getBools(self):
     def getDataSize(self):
     # ...
 ```
@@ -367,15 +353,6 @@ data = wb_receiver_get_data(tag, type)
 
 %tab-end
 
-%tab "ROS"
-
-| name | service/topic | data type | data type definition |
-| --- | --- | --- | --- |
-| `/<device_name>/data` | `topic` | `webots_ros::StringStamped` | [`Header`](http://docs.ros.org/api/std_msgs/html/msg/Header.html) `header`<br/>`string data` |
-| `/<device_name>/get_data_size` | `service` | [`webots_ros::get_int`](ros-api.md#common-services) | |
-
-%tab-end
-
 %end
 
 ##### Description
@@ -392,16 +369,7 @@ The `wb_receiver_get_data_size` function returns the number of data bytes presen
 The *data size* is always equal to the *size* argument of the corresponding `emitter_send_packet` function call.
 It is illegal to call the `wb_receiver_get_data_size` function when the queue is empty (i.e. when `wb_receiver_get_queue_length() == 0`).
 
-> **Note** [Python]: The `getData` function returns a string.
-Similarly to the `sendPacket` function of the [Emitter](emitter.md) device, using the functions of the struct module is recommended for sending primitive data types.
-Here is an example for getting the data:
-
-> ```python
-> import struct
-> #...
-> message=receiver.getData()
-> dataList=struct.unpack("chd",message)
-> ```
+> **Note** [Python]: In the Python API, instead of having a single function returning the data, multiple functions are defined that automatically convert the data to the expected return type (bytes, string, list of floats, list of integers, list of booleans).
 
 <!-- -->
 
@@ -516,15 +484,6 @@ x_y_z_array = wb_receiver_get_emitter_direction(tag)
 
 %tab-end
 
-%tab "ROS"
-
-| name | service/topic | data type | data type definition |
-| --- | --- | --- | --- |
-| `/<device_name>/get_signal_strength` | `service` | [`webots_ros::get_float`](ros-api.md#common-services) | |
-| `/<device_name>/get_emitter_direction` | `service` | `webots_ros::receiver_get_emitter_direction` | `uint8 ask`<br/>`---`<br/>`float64[] direction` |
-
-%tab-end
-
 %end
 
 ##### Description
@@ -626,15 +585,6 @@ WB_CHANNEL_BROADCAST
 wb_receiver_set_channel(tag, channel)
 channel = wb_receiver_get_channel(tag)
 ```
-
-%tab-end
-
-%tab "ROS"
-
-| name | service/topic | data type | data type definition |
-| --- | --- | --- | --- |
-| `/<device_name>/set_channel` | `service` | [`webots_ros::set_int`](ros-api.md#common-services) | |
-| `/<device_name>/get_channel` | `service` | [`webots_ros::get_int`](ros-api.md#common-services) | |
 
 %tab-end
 
