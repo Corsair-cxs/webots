@@ -123,7 +123,7 @@ The default value -1 indicates an infinitely strong docking mechanism that does 
 This can be used to simulate the rupture of the docking mechanism.
 The `shearStrength` field specifies the ability of two connectors to withstand a force that would makes them slide against each other in opposite directions (in the *yz*-plane).
 Note that if both connectors are locked, the effective shear strength corresponds to the sum of both connectors' `shearStrength` fields.
-The default value -1 indicates an infinitely strong docking mechanism that does not break no matter how much force is applied (in case both connectors are locked, it is sufficient to set the `shearStrength` field of one of the connectors to -1)..
+The default value -1 indicates an infinitely strong docking mechanism that does not break no matter how much force is applied (in case both connectors are locked, it is sufficient to set the `shearStrength` field of one of the connectors to -1).
 
 ### Connector Axis System
 
@@ -140,8 +140,7 @@ If these design criteria are not met, the [Connector](#connector) nodes will not
 
 %end
 
-> **Note**: To be functional, at least one of the two [Connector](#connector) nodes requires the presence of a [Physics](physics.md) node in its parent node.
-But it is not necessary to add a [Physics](physics.md) node to the [Connector](#connector) itself.
+> **Note**: To be functional, at least one of the two [Connector](#connector) nodes requires the presence of a [Physics](physics.md) node in its definition or in a parent node.
 
 ### Connector Functions
 
@@ -228,16 +227,6 @@ period = wb_connector_get_presence_sampling_period(tag)
 presence = wb_connector_get_presence(tag)
 locked = wb_connector_is_locked(tag)
 ```
-
-%tab-end
-
-%tab "ROS"
-
-| name | service/topic | data type | data type definition |
-| --- | --- | --- | --- |
-| `/<device_name>/presence` | `topic` | `webots_ros::Int8Stamped` | [`Header`](http://docs.ros.org/api/std_msgs/html/msg/Header.html) `header`<br/>`int8 data` |
-| `/<device_name>/presence_sensor/enable` | `service` | [`webots_ros::set_int`](ros-api.md#common-services) | |
-| `/<device_name>/presence_sensor/get_sampling_period` | `service` | [`webots_ros::get_int`](ros-api.md#common-services) | |
 
 %tab-end
 
@@ -353,14 +342,6 @@ public class Connector extends Device {
 wb_connector_lock(tag)
 wb_connector_unlock(tag)
 ```
-
-%tab-end
-
-%tab "ROS"
-
-| name | service/topic | data type | data type definition |
-| --- | --- | --- | --- |
-| `/<device_name>/lock` | `service` | [`webots_ros::set_bool`](ros-api.md#common-services) | |
 
 %tab-end
 

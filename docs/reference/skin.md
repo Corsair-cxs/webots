@@ -50,7 +50,7 @@ An example of purely graphical skin animation is provided in the "[skin\_animate
 - The `translation` field defines the translation from the parent coordinate system to the children's coordinate system.
 
 - The `rotation` field defines an arbitrary rotation of the children's coordinate system with respect to the parent coordinate system.
-Please refer to [Transform](transform.md) `rotation` field description for more information.
+Please refer to [Pose](pose.md) `rotation` field description for more information.
 
 - The `scale` field specifies a possibly non-uniform scale of the mesh.
 Only positive values are permitted; non-positive scale values are automatically reset to 1.
@@ -149,15 +149,6 @@ name = wb_skin_get_bone_name(tag, index)
 
 %tab-end
 
-%tab "ROS"
-
-| name | service/topic | data type | data type definition |
-| --- | --- | --- | --- |
-| `/<device_name>/get_bone_count` | `service` | [`webots_ros::get_int`](ros-api.md#common-services) | |
-| `/<device_name>/_get_bone_name` | `service` | `webots_ros::skin_get_bone_name` | `int32 index`<br/>`---`<br/>`string name` |
-
-%tab-end
-
 %end
 
 ##### Description
@@ -251,17 +242,6 @@ position = wb_skin_get_bone_position(tag, index, absolute)
 wb_skin_set_bone_orientation(tag, index, orientation, absolute)
 wb_skin_set_bone_position(tag, index, position, absolute)
 ```
-
-%tab-end
-
-%tab "ROS"
-
-| name | service/topic | data type | data type definition |
-| --- | --- | --- | --- |
-| `/<device_name>/get_bone_orientation` | `service` | `webots_ros::skin_get_bone_orientation` | `int32 index`<br/>`bool absolute`<br/>`---`<br/>`geometry_msgs/Quaternion orientation` |
-| `/<device_name>/get_bone_position` | `service` | `webots_ros::skin_get_bone_position` | `int32 index`<br/>`bool absolute`<br/>`---`<br/>`geometry_msgs/Point position` |
-| `/<device_name>/set_bone_orientation` | `service` | `webots_ros::skin_set_bone_orientation` | `int32 index`<br/>`geometry_msgs/Quaternion orientation`<br/>`bool absolute`<br/>`---`<br/>`int32 success` |
-| `/<device_name>/set_bone_position` | `service` | `webots_ros::skin_set_bone_position` | `int32 index`<br/>`geometry_msgs/Point position`<br/>`bool absolute`<br/>`---`<br/>`int32 success` |
 
 %tab-end
 

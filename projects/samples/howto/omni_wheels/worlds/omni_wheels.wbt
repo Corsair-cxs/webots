@@ -1,4 +1,9 @@
-#VRML_SIM R2022a utf8
+#VRML_SIM R2025a utf8
+
+EXTERNPROTO "webots://projects/objects/backgrounds/protos/TexturedBackground.proto"
+EXTERNPROTO "webots://projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
+EXTERNPROTO "webots://projects/objects/floors/protos/RectangleArena.proto"
+
 WorldInfo {
   info [
     "Thanks to Mehdi Ghanavati, Shahid Chamran University"
@@ -38,13 +43,14 @@ DEF OMNI_WHEELS Robot {
             children [
               DEF sr1 HingeJoint {
                 jointParameters HingeJointParameters {
+                  axis 0 1 0
                   anchor -0.02 0 0.05
                 }
                 endPoint Solid {
                   translation -0.02 0 0.05
                   rotation 1 0 0 0
                   children [
-                    DEF r1 Transform {
+                    DEF r1 Pose {
                       rotation -1 0 0 1.5708
                       children [
                         DEF SMALL_WHEEL_SHAPE Shape {
@@ -78,7 +84,7 @@ DEF OMNI_WHEELS Robot {
                   translation -0.02 0.03535 0.03535
                   rotation 0 -0.7071067811865476 0.7071067811865476 0
                   children [
-                    DEF r2 Transform {
+                    DEF r2 Pose {
                       rotation -1 0 0 2.27
                       children [
                         USE SMALL_WHEEL_SHAPE
@@ -95,13 +101,14 @@ DEF OMNI_WHEELS Robot {
               }
               DEF sr3 HingeJoint {
                 jointParameters HingeJointParameters {
+                  axis 0 1 0
                   anchor -0.02 0 -0.05
                 }
                 endPoint Solid {
                   translation -0.02 0 -0.05
                   rotation 1 0 0 0
                   children [
-                    DEF r3 Transform {
+                    DEF r3 Pose {
                       rotation -1 0 0 1.5708
                       children [
                         USE SMALL_WHEEL_SHAPE
@@ -125,7 +132,7 @@ DEF OMNI_WHEELS Robot {
                   translation -0.02 -0.03535 -0.03535
                   rotation 0 -0.7071067811865476 0.7071067811865476 0
                   children [
-                    DEF r4 Transform {
+                    DEF r4 Pose {
                       rotation -1 0 0 2.27
                       children [
                         USE SMALL_WHEEL_SHAPE
@@ -148,7 +155,7 @@ DEF OMNI_WHEELS Robot {
                 endPoint Solid {
                   translation -0.02 0.05 0
                   children [
-                    DEF r5 Transform {
+                    DEF r5 Pose {
                       children [
                         USE SMALL_WHEEL_SHAPE
                       ]
@@ -170,7 +177,7 @@ DEF OMNI_WHEELS Robot {
                 endPoint Solid {
                   translation -0.02 -0.05 0
                   children [
-                    DEF r6 Transform {
+                    DEF r6 Pose {
                       children [
                         USE SMALL_WHEEL_SHAPE
                       ]
@@ -193,7 +200,7 @@ DEF OMNI_WHEELS Robot {
                   translation -0.02 0.03535 -0.03535
                   rotation 0 0.7071067811865476 0.7071067811865476 0
                   children [
-                    DEF r7 Transform {
+                    DEF r7 Pose {
                       rotation -1 0 0 0.76
                       children [
                         USE SMALL_WHEEL_SHAPE
@@ -217,7 +224,7 @@ DEF OMNI_WHEELS Robot {
                   translation -0.02 -0.03535 0.03535
                   rotation 0 0.7071067811865476 0.7071067811865476 0
                   children [
-                    DEF r8 Transform {
+                    DEF r8 Pose {
                       rotation -1 0 0 0.76
                       children [
                         USE SMALL_WHEEL_SHAPE
@@ -232,7 +239,7 @@ DEF OMNI_WHEELS Robot {
                   }
                 }
               }
-              DEF WHEEL_TRANS Transform {
+              DEF WHEEL_TRANS Pose {
                 translation -0.02 0 0
                 rotation 0 -1 0 1.5708
                 children [
@@ -251,7 +258,7 @@ DEF OMNI_WHEELS Robot {
                 ]
               }
             ]
-            boundingObject Transform {
+            boundingObject Pose {
               translation -0.02 0 0
               rotation 0 -1 0 1.5708
               children [
@@ -301,6 +308,7 @@ DEF OMNI_WHEELS Robot {
             children [
               DEF sr1 HingeJoint {
                 jointParameters HingeJointParameters {
+                  axis 0 1 0
                   anchor -0.02 0 0.05
                 }
                 endPoint Solid {
@@ -338,6 +346,7 @@ DEF OMNI_WHEELS Robot {
               }
               DEF sr3 HingeJoint {
                 jointParameters HingeJointParameters {
+                  axis 0 1 0
                   anchor -0.02 0 -0.05
                 }
                 endPoint Solid {
@@ -449,7 +458,7 @@ DEF OMNI_WHEELS Robot {
               }
               USE WHEEL_TRANS
             ]
-            boundingObject Transform {
+            boundingObject Pose {
               translation -0.02 0 0
               rotation 0 -1 0 1.5708
               children [
@@ -497,6 +506,7 @@ DEF OMNI_WHEELS Robot {
             children [
               DEF sr1 HingeJoint {
                 jointParameters HingeJointParameters {
+                  axis 0 1 0
                   anchor -0.02 0 0.05
                 }
                 endPoint Solid {
@@ -534,6 +544,7 @@ DEF OMNI_WHEELS Robot {
               }
               DEF sr3 HingeJoint {
                 jointParameters HingeJointParameters {
+                  axis 0 1 0
                   anchor -0.02 0 -0.05
                 }
                 endPoint Solid {
@@ -645,7 +656,7 @@ DEF OMNI_WHEELS Robot {
               }
               USE WHEEL_TRANS
             ]
-            boundingObject Transform {
+            boundingObject Pose {
               translation -0.02 0 0
               rotation 0 -1 0 1.5708
               children [
@@ -674,7 +685,7 @@ DEF OMNI_WHEELS Robot {
       physics Physics {
       }
     }
-    DEF BODY_TRANS Transform {
+    DEF BODY_TRANS Pose {
       translation 0 0 0.03
       children [
         Shape {
